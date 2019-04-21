@@ -1,58 +1,42 @@
-import io from 'socket.io-client';
 import React, { Component } from 'react';
-import { LiterallyCanvasReactComponent, defaultTools, tools } from 'literallycanvas';
+import { LiterallyCanvasReactComponent, tools } from 'literallycanvas';
 
 class DrawingCanvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      connected: false,
-      tools: undefined
+      lc: undefined,
+      tools: props.canDraw 
+        ? [tools.Pencil, tools.Eraser, tools.Pan, tools.Eyedropper] : [tools.Pan]
     };
   }
-  
-  componentDidMount() {
-    this.socket = io.connect('http://localhost:8080');
 
-    this.socket.on('connect', () => this.setState(() => ({ connected: true })))
+  componentDidUpdate({ draw: oldDraw }) {
+    this.loadDraw();
+  }
 
-    // const handleDraw = ({ canDraw }) => {
-    //   this.setState(() => ({ 
-    //     connected: true, 
-    //     tools: canDraw ? defaultTools : [tools.Pan]
-    //   }));
-
-    //   this.socket.off('draw', handleDraw);
-    // };
-
-    // this.socket.on('draw', handleDraw);
+  loadDraw() {
+    if (this.state.lc)
+      this.state.lc.loadSnapshot(this.props.draw);
   }
 
   onCanvasInit(lc) {
-    let unregisterDrawWatcher = () => {};
-    const registerDrawWatcher = () => {
-      unregisterDrawWatcher = lc.on('drawingChange', () => {
-        this.socket.emit('draw', { drawUpdate: lc.getSnapshot(['shapes']) });
-      });
-    };
+    this.setState({ lc });
 
-    registerDrawWatcher();
+    lc.on('clear', () => this.loadDraw());
 
-    this.socket.on('draw', ({ draw }) => {
-      unregisterDrawWatcher();
-      lc.loadSnapshot(draw);
-      registerDrawWatcher();
-    });
+    if (this.props.canDraw)
+      lc.on('drawingChange', () => this.props.onDraw(
+        lc.getSnapshot(['shapes'])
+      ));
   }
 
   render() {
     return (
       <div className="DrawingCanvas">
-        {this.state.connected && 
-          <LiterallyCanvasReactComponent onInit={this.onCanvasInit.bind(this)} imageURLPrefix="/img" tools={this.state.tools} />
-        }
+        <LiterallyCanvasReactComponent onInit={this.onCanvasInit.bind(this)} imageURLPrefix="/img" tools={this.state.tools} />
       </div>
-    )
+    );
   }
 }
 

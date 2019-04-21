@@ -1,4 +1,4 @@
-@import 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.css';
+@import './bootstrap.css';
 @import '../node_modules/literallycanvas/lib/css/literallycanvas.css';
 
 body {
