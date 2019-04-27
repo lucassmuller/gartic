@@ -7,6 +7,7 @@ class Room extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      usuarios: [],
       usuario: window.user,
       draw: undefined,
       canDraw: undefined,
@@ -19,7 +20,7 @@ class Room extends Component {
     if(!this.state.usuario)
       this.props.history.push('/');
 
-    window.socket.on('user:update', (update) => this.setState(update));
+    window.socket.on('room:users', (usuarios) => this.setState({ usuarios }));
 
     window.socket.on('draw', (update) => this.setState({
       ...update,
@@ -53,14 +54,16 @@ class Room extends Component {
       <div className="room row">
         {this.state.ready &&
           <div className="sidebar col-4">
-            <div className="user">
-              {/* <img src="https://semantic-ui.com/images/avatar2/large/matthew.png" alt="Lucas Müller" className="user-img" /> */}
-              {this.state.usuario && 
-                <div className="user-info">
-                  <h4 className="text-white m-0">{this.state.usuario.nome}</h4>
-                  <h6 className="text-white m-0">{this.state.usuario.pontuacao} ponto(s)</h6>
+            <div className="users">
+              {this.state.usuarios.sort((a, b) => b.pontuacao - a.pontuacao)
+                .map((user, i) =>  <div key={i} className="user">
+                  <h3 className="text-white mr-3">{i + 1}º</h3>
+                  <div className="user-info">
+                    <h4 className="text-white m-0">{user.nome}</h4>
+                    <h6 className="text-white m-0">{user.pontuacao} ponto(s)</h6>
+                  </div>
                 </div>
-              }
+              )}
             </div>
             <div className="conversations">
               <form onSubmit={this.sendOpinion.bind(this)}>

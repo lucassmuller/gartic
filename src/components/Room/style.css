@@ -11,8 +11,7 @@
 .room .user {
   display: flex;
   padding: 15px;
-  border-top-left-radius: 5px;
-  background-color: #00AAE8;
+  border-bottom: 2px solid #00AAE8;
   align-items: center;
 }
 
@@ -24,8 +23,12 @@
   margin-right: 15px;
 }
 
-.room .conversations {
+.room .users {
   flex: 1;
+  border-top-left-radius: 5px;
+}
+
+.room .conversations {
   border-bottom-left-radius: 5px;
   
   display: flex;

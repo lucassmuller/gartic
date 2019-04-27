@@ -6,12 +6,13 @@ class DrawingCanvas extends Component {
     super(props);
     this.state = {
       lc: undefined,
-      tools: props.canDraw 
-        ? [tools.Pencil, tools.Eraser, tools.Pan, tools.Eyedropper] : [tools.Pan]
+      tools: props.canDraw
+        ? [tools.Pencil, tools.Eraser, tools.Pan, tools.Eyedropper]
+        : [tools.Pan]
     };
   }
 
-  componentDidUpdate({ draw: oldDraw }) {
+  componentDidUpdate() {
     this.loadDraw();
   }
 
