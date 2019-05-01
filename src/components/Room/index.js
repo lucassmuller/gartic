@@ -28,8 +28,13 @@ class Room extends Component {
     }));
     
     window.socket.on('draw:word', ({palavra}) => this.setState({
-      palavra: `Desenhe: ${palavra}`
+      palavra: palavra ? `Desenhe: ${palavra}` : ''
     }));
+
+    window.socket.on('room:end', (usuarios) => {
+      window.winner = usuarios.sort((a, b) => b.pontuacao - a.pontuacao)[0];
+      this.props.history.push('/room/end');
+    })
   }
 
   componentDidUpdate({ canDraw }) {

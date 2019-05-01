@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Room from '../Room';
+import RoomEnd from '../RoomEnd';
 import JoinRoom from '../JoinRoom';
 
 import './style.css';
@@ -25,6 +26,7 @@ class App extends Component {
             <div className="container">
               <Route path="/" exact={true} component={JoinRoom} />
               <Route path="/room" exact={true} component={Room} />
+              <Route path="/room/end" exact={true} component={RoomEnd} />
             </div>
           </div>
         </div>
