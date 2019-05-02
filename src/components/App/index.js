@@ -10,7 +10,7 @@ import './style.css';
 
 class App extends Component {
   componentWillMount() {
-    window.socket = io.connect('http://localhost:8080');
+    window.socket = io.connect('https://gartic-server.herokuapp.com/');
   }
 
   render() {
